@@ -9,15 +9,15 @@ const UsernameQuerySchema = z.object({
 
 export async function GET(request: Request) {
   await dbConnect();
+
   try {
     const { searchParams } = new URL(request.url);
     const queryParams = {
-      username: searchParams.get("username"), //Example out: localhost:3000/api/cuu?username=zain?phone=andriod
-      // we will get only username from username
+      username: searchParams.get('username'),
     };
-    // validate with zod
+
     const result = UsernameQuerySchema.safeParse(queryParams);
-    console.log(result);
+
     if (!result.success) {
       const usernameErrors = result.error.format().username?._errors || [];
       return Response.json(
@@ -25,49 +25,45 @@ export async function GET(request: Request) {
           success: false,
           message:
             usernameErrors?.length > 0
-              ? usernameErrors.join(", ")
-              : "invalid query parameters",
+              ? usernameErrors.join(', ')
+              : 'Invalid query parameters',
         },
-        {
-          status: 400,
-        }
+        { status: 400 }
       );
     }
+
     const { username } = result.data;
+
     const existingVerifiedUser = await UserModel.findOne({
       username,
       isVerified: true,
     });
+
     if (existingVerifiedUser) {
       return Response.json(
         {
           success: false,
-          message: "User name is already taken",
+          message: 'Username is already taken',
         },
-        {
-          status: 400,
-        }
+        { status: 200 }
       );
     }
+
     return Response.json(
       {
         success: true,
-        message: "Username available",
+        message: 'Username is unique',
       },
-      {
-        status: 200,
-      }
+      { status: 200 }
     );
   } catch (error) {
-    console.error("error checking username", error);
+    console.error('Error checking username:', error);
     return Response.json(
       {
         success: false,
-        message: "Error checking username",
+        message: 'Error checking username',
       },
-      {
-        status: 500,
-      }
+      { status: 500 }
     );
   }
 }
