@@ -3,6 +3,7 @@ import { dbConnect } from "@/lib/dbConnect";
 import UserModel from "@/models/User";
 import bcrypt from "bcryptjs";
 import CredentialsProvider from "next-auth/providers/credentials";
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -15,10 +16,11 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials: any): Promise<any> {
         await dbConnect();
         try {
+          // Fix typo from 'indentifier' to 'identifier'
           const user = await UserModel.findOne({
             $or: [
-              { email: credentials.indentifier },
-              { username: credentials.indentifier },
+              { email: credentials.identifier },
+              { username: credentials.identifier },
             ],
           });
           if (!user) {
@@ -27,6 +29,7 @@ export const authOptions: NextAuthOptions = {
           if (!user.isVerified) {
             throw new Error("User not verified");
           }
+
           const validPass = await bcrypt.compare(
             credentials.password,
             user.password
@@ -45,7 +48,6 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, token }) {
       if (token) {
-        session.user._id = token._id;
         session.user._id = token._id?.toString();
         session.user.isVerified = token.isVerified;
         session.user.isAcceptingMessages = token.isAcceptingMessages;
