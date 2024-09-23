@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
   const url = request.nextUrl;
 
   // If the user is authenticated and trying to access sign-in, sign-up, or home, redirect to dashboard
-  if (token && (url.pathname === "/sign-in" || url.pathname === "/sign-up" || url.pathname === "/")) {
+  if (token && (url.pathname === "/sign-in" || url.pathname === "/sign-up")) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
