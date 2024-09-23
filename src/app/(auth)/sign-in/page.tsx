@@ -36,7 +36,7 @@ export default function SignInForm() {
       identifier: data.identifier,
       password: data.password,
     });
-    console.log("Sign-in result:", result); 
+    console.log("Sign-in result:", result); // Add this log to check what is returned
     if (result?.error) {
       if (result.error === "CredentialsSignin") {
         toast({
@@ -52,8 +52,8 @@ export default function SignInForm() {
         });
       }
     }
-
     if (result?.url) {
+      console.log("Redirecting to:", result.url);
       router.replace("/dashboard");
     }
   };

@@ -49,7 +49,7 @@ export default function SignUpForm() {
         setUsernameMessage(''); // Reset message
         try {
           const response = await axios.get<ApiResponse>(
-            `/api/check-unique-username?username=${debounced}`
+            `/api/check-unique-username?username=${username}`
           );
           setUsernameMessage(response.data.message);
         } catch (error) {
@@ -117,6 +117,7 @@ export default function SignUpForm() {
                 <FormItem>
                   <FormLabel className="text-black">Username</FormLabel>
                   <Input
+                  className="text-black"
                     {...field}
                     onChange={(e) => {
                       field.onChange(e);
@@ -146,7 +147,9 @@ export default function SignUpForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-black">Email</FormLabel>
-                  <Input {...field} name="email" />
+                  <Input 
+                  className="text-black"
+                  {...field} name="email" />
                   <p className='text-muted text-gray-400 text-sm'>We will send you a verification code</p>
                   <FormMessage />
                 </FormItem>
@@ -159,7 +162,9 @@ export default function SignUpForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-black">Password</FormLabel>
-                  <Input type="password" {...field} name="password" />
+                  <Input 
+                  className="text-black"
+                  type="password" {...field} name="password" />
                   <FormMessage />
                 </FormItem>
               )}
