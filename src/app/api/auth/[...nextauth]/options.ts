@@ -14,6 +14,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials: any): Promise<any> {
+        console.log("Received credentials:", credentials);
         await dbConnect();
         try {
           // Fix typo from 'indentifier' to 'identifier'
